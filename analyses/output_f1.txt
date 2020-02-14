@@ -1,0 +1,4 @@
+The total number of white people that are in my sample is 223553265.
+The percentage of white people in my sample that live at least one half mile away from the supermarket is 74.12%.
+The percentage of white people in my sample that live at least one mile away from the supermarket is 45.06%.
+The percentage of white people in my sample that live at least ten miles away from the supermarket is 1.93%.
