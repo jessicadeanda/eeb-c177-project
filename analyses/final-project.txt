@@ -1,2 +1,0 @@
-The total number of occurrences in my data is 72863.
-Percentage of white population living beyond half a mile from the supermarket: 74.12%.
