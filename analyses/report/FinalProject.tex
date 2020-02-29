@@ -1,0 +1,198 @@
+%2. Your methods section must include code that is integrated into the LaTeX
+%document. This article (https://www.overleaf.com/learn/latex/Code_listing)
+%iscusses how to use commands to load in formatted code into your LaTeX
+%document. Please follow this guide to load in your initial code that you
+%have been working on so far into your document. The code that you
+%include must:
+%• Include functions that open your final, manipulate your data in some way,
+%and close the file
+%• Must be commented and have function descriptions and comments that
+%clearly outline what and why you are doing what you are with your code
+%• Include use of the re module in some way with your data manipulations to
+%do something interesting and useful with regular expressions within yourPython script
+%3. Your introduction at the moment should contain at least an outline of
+%the relevant literature and biologically motivating information for why you
+%are working on this project in the first place.
+%4. Make a directory in your final project repo on GitHub called report,
+%and include all necessary files for your LaTeX document in here. Name your
+%LaTeX file something meaningful so that it is easy for me to find. Make
+%sure that the output PDF file is also located within this report directory.
+%5. You will be graded on the contents of your LaTeX script, the output PDF,
+%the content within the outline, and following the instructions presented in
+%this homework description. Any outlines that do not follow the instructions
+%of this document are subject to losing points.
+
+% Define the document type and format font, margins, and the basics
+\documentclass[letterpaper]{article}
+\usepackage{times}
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\setlength{\parskip}{1em}
+
+% to import images 
+\usepackage{graphicx}
+\graphicspath{ {Final Project} }
+
+% to format code
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% title page
+\title{My Final Project}
+\author{Jessica De Anda}
+\date{February 2020}
+
+% begin the document
+\begin{document}
+
+\maketitle
+\section*{Abstract}
+
+\newpage
+\tableofcontents
+\listoffigures
+
+\newpage
+\section{Introduction}
+
+\section{Methods}
+
+\subsection{Importing the data file}
+
+Public data on food access in the United States in 2010 was downloaded from the United States Department of Agriculture (USDA) as a csv file.  A function was defined within a python script to open the csv file, import the data using the pandas library, and convert the data to a numpy file for future numerical analysis.
+\vspace{0.25cm}
+
+% Start code-block and define it as python
+\lstset{language=Python}
+\begin{lstlisting}[frame=single]  
+
+import pandas as pd
+import numpy as np
+
+def np_from_csv(csv_file):
+    temp_data = pd.read_csv(csv_file, header = None)
+    data = temp_data.to_numpy()
+    return data
+
+data = np_from_csv('food_access_data.csv')
+
+\end{lstlisting}
+
+\subsection{Analysis of access to supermarkets across racial categories}
+
+A function was defined to calculate the percentage of a race living at a particular distance from the supermarket. Given an input of race and distance, the defined function first uses the numpy.sum operation to calculate the total number of individuals of the race living at the specified distance from the supermarket. This value is then divided by total number of individuals of the race, which was also generated using the numpy.sum operation. The function returns the calculation as a percentage by multiplying the value by 100.
+\vspace{0.25cm}
+
+\lstset{language=Python}
+\begin{lstlisting}[frame=single] 
+def percent_race_at_distance(input_data, race_distance, race_total, dec = 2):
+    # inside the parentheses, the format is: dataset_imported[rows, columns]
+    race_distance_sum = np.sum(input_data[:, race_distance])
+    race_total_sum = np.sum(input_data[:, race_total])
+    percentage = race_distance_sum/race_total_sum * 100
+    return round(percentage, dec)
+
+\end{lstlisting}
+
+A second function takes an input of race name and the previously calculated percentage of that race living at a given distance from the supermarket to plot the percentages against the corresponding distances. The plot function of the matplotlib.pyploy library was used to graph this relationship and additional functionalities of this library were used to format the plot.
+\vspace{0.25cm}
+
+\lstset{language=Python}
+\begin{lstlisting}[frame=single]
+import matplotlib.pyplot as plt
+
+def plot_race_percentage_vs_distance(race, perc):
+    [half,one,ten,twenty] = perc
+    plt.plot([0.5, 1, 10, 20],[half, one, ten, twenty])
+    # the following code formats the plot
+    plt.axis([0, 20, 0, 100])
+    plt.xlabel('Distance from Supermarket (Miles)')
+    plt.ylabel('Percentage')
+    plt.title('Percentage of %s Population Living at a Distance from a Supermarket' % race)
+    return
+
+\end{lstlisting}
+
+\lstset{language=Python}
+\begin{lstlisting}[frame=single]
+
+### DEFINE VARIABLES TO BE USED IN ROBUST FUNCTION (MODIFIED)
+total = [white_total, black_total, asian_total, islander_total, native_total, other_total, latino_total]
+# earlier in the code, I defined each of the variables in this list
+# these totals will eventually be pulled by the function
+distance = [[white_half, white_1, white_10, white_20],
+            [black_half, black_1, black_10, black_20],
+            [asian_half, asian_1, asian_10, asian_20],
+            [islander_half, islander_1, islander_10, islander_20],
+            [native_half, native_1, native_10, native_20],
+            [other_half, other_1, other_10, other_20],
+            [latino_half, latino_1, latino_10, latino_20]]
+# these variables were also defined earlier in the code (each is a column in the dataset)
+# since there are four distances per race for a total of seven racial categories, I made an 7x4 2D array
+name = ['White', 'Black', 'Asian', 'Islander', 'Native', 'Other', 'Latino']
+# list of the racial group categories
+num_races = len(total)
+# the number of races in the data set, which equals the length of the list 'total'
+num_dist = 4
+# there are four distances
+perc = numpy.zeros((num_races,num_dist))
+# this is very similar to when we open an empty list before a for loop to add (append) stuff later
+# BUT it will create an empty 7x4 2D array because it has an array with 4 distance entries for each of the 7 races
+# learned this from Mark Geha; https://www.geeksforgeeks.org/numpy-zeros-python/
+
+### MODIFIED FUNCTION THAT CALCULATES AND PLOTS ALL PERCENTAGES
+for race in range(num_races):
+# this line says that the following for loop will run 7 times
+# because there are 7 races and it will run once per race
+    for dist in range(num_dist):
+    # within the for loop (i.e. for each race), the next set of code will run 4 times
+    # because it will run for each of the 4 distances per race
+        perc[race][dist] = percent_race_at_distance(data, distance[race][dist], total[race], 2)
+        # this will add items to the empty 2D array
+        # the items will correspond to the output of the function that was defined to calculate percentages
+        # USE BRACKETS BECAUSE WERE ARE PULLING FROM AND ADDING TO ARRAYS
+    plot_race_percentage_vs_distance(name[race], perc[race])
+    # this will now take the new array made from the output of the percentage function
+    # and put it into the plotting function defined earlier
+    # it will pull a race from the list 'name'
+    # and pull an array of percents per race --> it will run each percentage at a time
+    # RECALL [half,one,ten,twenty] = perc
+plt.legend(name)
+# the next line of code will overlay the plots, so we need a legend
+# the legent pulls the names from the list 'name', which has the racial categories
+plt.show()
+
+\end{lstlisting}
+
+\section{Results}
+
+\section{Discussion}
+
+\section{References}
+
+\section{Figures}
+
+\end{document}
