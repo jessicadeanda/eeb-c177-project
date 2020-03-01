@@ -1,9 +1,3 @@
-% NEED:
-	% references in the introduction
-		% biological relevace
-	% use of the re module in some way with your data manipulations to do something interesting and useful with regular expressions within yourPython script
-	% export as PDF 
-
 % Define the document type and format font, margins, and the basics
 \documentclass[letterpaper]{article} % set document type as 8.5"x11" article
 \usepackage{times} % set Times font
@@ -46,7 +40,7 @@
 \lstset{style=mystyle}
 
 % title page
-\title{My Final Project}
+\title{Analysis of Food Access in the United States}
 \author{Jessica De Anda}
 \date{February 2020}
 
@@ -87,12 +81,6 @@ OUTLINE:
 			\item Methods: obtained data on 2010 food access in the US from USDA. Calculated the percentage of each racial group (white, black, asian, latino, islander, native american, and other) living at 0.5, 1, 10, and 20 miles from a supermarket.
 			\item Hypothesis: based on past research, it is likely that all racial minorities will have less access to supermarkets than the white population in the US
 		\end{itemize}
-	\item Future directions
-		\begin{itemize}\itemsep -.1cm\vspace{-.25cm}
-			\item Use GIS to construct a map to better visualize the data. Report randomly selected case studies in order to get a better idea of how living at each of these distances from the supermarket influences different people
-			\item also look at price --> doesn't matter that a supermarket is close by if the food is too expensive to buy!
-			\item Research ways to address food insecurity
-		\end{itemize}
 \end{itemize}
 
 \section{Methods}
@@ -119,7 +107,7 @@ data = np_from_csv('food_access_data.csv')
 \end{lstlisting}
 % close the imported code with the command above
 
-\subsection{Analysis of access to supermarkets across racial categories}
+\subsection{Analysis of access to supermarkets per racial category}
 
 A function was defined to calculate the percentage of a race living at a particular distance from the supermarket. Given an input of race and distance, the defined function first used the numpy.sum operation to calculate the total number of individuals of the race living at the specified distance from the supermarket. This value was then divided by total number of individuals of the race, which was also generated using the numpy.sum operation. The function returned the calculation as a percentage by multiplying the value by 100.
 \vspace{0.25cm} % add space after paragraph
@@ -202,11 +190,49 @@ plt.legend(name)
 plt.show()
 \end{lstlisting}
 
+\subsection{Using Regex}
+
+A dictionary reflecting the number of entries corresponding to each county was created In order to gain a sense of where the data is coming from. The dataset was imported as a txt file. The "county" column was extracted and appended to an empty list. The re.findall value was then used to find all strings in the new list regardless of potential formatting differences and the defaultdict subclass was importd in order to count the amount of occurrences of each county. These values were stored with their corresponding county in a new dictionary. 
+
+\lstset{language=Python}
+\begin{lstlisting}[frame=single]
+import csv
+import re
+
+counties = []
+# opens an empty list
+with open ("complete_data.txt", "r") as dset:
+# opens the text file and calls it dset
+    data2 = csv.DictReader(dset, delimiter = "\t")
+    # \t indicates that the delimiter is a tab
+    for row in data2:
+        counties.append(row['county'])
+        # extracts the county column and appends it to the empty list
+
+# use regular expressions to match all strings in the list 
+# the strings correspond to county names 
+county_regex = re.compile(r'\w+')
+re.findall(auth_regex, str(test_strings))
+
+# count the amount of occurrences of each county and organize them in a dictionary
+from collections import defaultdict
+county_dict = defaultdict(int)
+for county in counties:
+    county_dict[county] += 1
+\end{lstlisting}
+
 \section{Results}
 
 
 
 \section{Discussion}
+
+Future directions
+\begin{itemize}\itemsep -.1cm\vspace{-.25cm}
+	\item Use GIS to construct a map to better visualize the data. Report randomly selected case studies in order to get a better idea of how living at each of these distances from the supermarket influences different people
+	\item also look at price --> doesn't matter that a supermarket is close by if the food is too expensive to buy!
+	\item Research ways to address food insecurity
+\end{itemize}
 
 \newpage
 \section{References}
