@@ -1,45 +1,29 @@
-%2. Your methods section must include code that is integrated into the LaTeX
-%document. This article (https://www.overleaf.com/learn/latex/Code_listing)
-%iscusses how to use commands to load in formatted code into your LaTeX
-%document. Please follow this guide to load in your initial code that you
-%have been working on so far into your document. The code that you
-%include must:
-%• Include functions that open your final, manipulate your data in some way,
-%and close the file
-%• Must be commented and have function descriptions and comments that
-%clearly outline what and why you are doing what you are with your code
-%• Include use of the re module in some way with your data manipulations to
-%do something interesting and useful with regular expressions within yourPython script
-%3. Your introduction at the moment should contain at least an outline of
-%the relevant literature and biologically motivating information for why you
-%are working on this project in the first place.
-%4. Make a directory in your final project repo on GitHub called report,
-%and include all necessary files for your LaTeX document in here. Name your
-%LaTeX file something meaningful so that it is easy for me to find. Make
-%sure that the output PDF file is also located within this report directory.
-%5. You will be graded on the contents of your LaTeX script, the output PDF,
-%the content within the outline, and following the instructions presented in
-%this homework description. Any outlines that do not follow the instructions
-%of this document are subject to losing points.
+% NEED:
+	% references in the introduction
+		% biological relevace
+	% use of the re module in some way with your data manipulations to do something interesting and useful with regular expressions within yourPython script
+	% export as PDF 
 
 % Define the document type and format font, margins, and the basics
-\documentclass[letterpaper]{article}
-\usepackage{times}
-\usepackage[margin=1in]{geometry}
+\documentclass[letterpaper]{article} % set document type as 8.5"x11" article
+\usepackage{times} % set Times font
+\usepackage[margin=1in]{geometry} % set 1" margins
 \usepackage[utf8]{inputenc}
-\setlength{\parskip}{1em}
+\setlength{\parskip}{1em} % add space after every paragraph
 
 % to import images 
 \usepackage{graphicx}
 \graphicspath{ {Final Project} }
 
-% to format code
+% import packages to format code that will be imported 
 \usepackage{listings}
 \usepackage{xcolor}
+% defining colors to apply to parts of code --> makes the code easier to follow
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+% saves the following formatting guide as "mystyle" 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
     commentstyle=\color{codegreen},
@@ -58,6 +42,7 @@
     showtabs=false,                  
     tabsize=2
 }
+% Makes it so that any code imported will be structured according to "mystyle" which is defined above 
 \lstset{style=mystyle}
 
 % title page
@@ -76,11 +61,44 @@
 \listoffigures
 
 \newpage
+% create a section title
 \section{Introduction}
+
+OUTLINE:
+
+\begin{itemize} \itemsep -.1cm
+% creates an itemized list (bullet points) for better visualization of my outline
+% also decreases the space between the items
+	\item Present the issue: access to supermarkets in the US is not uniform across the country. Poor access to supermarkets in this report is defined as living far from a supermarket and lacking vehicle access.
+		\begin{itemize}\itemsep -.1cm\vspace{-.25cm}
+		% adds another level to the list
+			\item Why we should care: poor access to food = lower quality of life
+			\item Biological impact of food deserts: health; research demonstrates that obesity is prominent in communities living in food deserts. The lack of access to supermarkets with fresh produce perpetuates community dependence on fast food, which is typically unhealthy (high fat, low nutrient).
+			\item REFERENCES: Gordon-Larsen, 2014 ; National Research Council, 2007 ; White, 2007
+		\end{itemize}
+	\item Factors that influence access to food: socioeconomic status
+		\begin{itemize}\itemsep -.1cm\vspace{-.25cm}
+			\item Income/economic standing: low income communities are less likely to have access to fresh produce
+			\item Race: racial profile often influences economic standing. Lower income communities tend to be comprised of racial minorities (largely due to social inequity), therefore there may be a correlation between access to food and racial identity (REFERENCE: Tobin and Weaver, 2017)
+		\end{itemize}
+	\item Overview of this report
+		\begin{itemize}\itemsep -.1cm\vspace{-.25cm}
+			\item Purpose: to assess trends betwwen socioeconomic status and access to food in the US in order to identify the groups that may need additional services from the government to improve their quality of life
+			\item Methods: obtained data on 2010 food access in the US from USDA. Calculated the percentage of each racial group (white, black, asian, latino, islander, native american, and other) living at 0.5, 1, 10, and 20 miles from a supermarket.
+			\item Hypothesis: based on past research, it is likely that all racial minorities will have less access to supermarkets than the white population in the US
+		\end{itemize}
+	\item Future directions
+		\begin{itemize}\itemsep -.1cm\vspace{-.25cm}
+			\item Use GIS to construct a map to better visualize the data. Report randomly selected case studies in order to get a better idea of how living at each of these distances from the supermarket influences different people
+			\item also look at price --> doesn't matter that a supermarket is close by if the food is too expensive to buy!
+			\item Research ways to address food insecurity
+		\end{itemize}
+\end{itemize}
 
 \section{Methods}
 
-\subsection{Importing the data file}
+% create a subsection within Methods
+\subsection{Importing the data file} 
 
 Public data on food access in the United States in 2010 was downloaded from the United States Department of Agriculture (USDA) as a csv file.  A function was defined within a python script to open the csv file, import the data using the pandas library, and convert the data to a numpy file for future numerical analysis.
 \vspace{0.25cm}
@@ -88,7 +106,6 @@ Public data on food access in the United States in 2010 was downloaded from the 
 % Start code-block and define it as python
 \lstset{language=Python}
 \begin{lstlisting}[frame=single]  
-
 import pandas as pd
 import numpy as np
 
@@ -100,11 +117,12 @@ def np_from_csv(csv_file):
 data = np_from_csv('food_access_data.csv')
 
 \end{lstlisting}
+% close the imported code with the command above
 
 \subsection{Analysis of access to supermarkets across racial categories}
 
-A function was defined to calculate the percentage of a race living at a particular distance from the supermarket. Given an input of race and distance, the defined function first uses the numpy.sum operation to calculate the total number of individuals of the race living at the specified distance from the supermarket. This value is then divided by total number of individuals of the race, which was also generated using the numpy.sum operation. The function returns the calculation as a percentage by multiplying the value by 100.
-\vspace{0.25cm}
+A function was defined to calculate the percentage of a race living at a particular distance from the supermarket. Given an input of race and distance, the defined function first used the numpy.sum operation to calculate the total number of individuals of the race living at the specified distance from the supermarket. This value was then divided by total number of individuals of the race, which was also generated using the numpy.sum operation. The function returned the calculation as a percentage by multiplying the value by 100.
+\vspace{0.25cm} % add space after paragraph
 
 \lstset{language=Python}
 \begin{lstlisting}[frame=single] 
@@ -117,7 +135,7 @@ def percent_race_at_distance(input_data, race_distance, race_total, dec = 2):
 
 \end{lstlisting}
 
-A second function takes an input of race name and the previously calculated percentage of that race living at a given distance from the supermarket to plot the percentages against the corresponding distances. The plot function of the matplotlib.pyploy library was used to graph this relationship and additional functionalities of this library were used to format the plot.
+A second function took an input of race name and the previously calculated percentage of that race living at a given distance from the supermarket to plot the percentages against the corresponding distances. The plot function of the matplotlib.pyploy library was used to graph this relationship and additional functionalities of this library were used to format the plot.
 \vspace{0.25cm}
 
 \lstset{language=Python}
@@ -136,13 +154,14 @@ def plot_race_percentage_vs_distance(race, perc):
 
 \end{lstlisting}
 
+All of the data in the file was organized into arrays. The data would later be extracted sequentially and inputted into a for loop that combined the two defined functions.
+\vspace{0.25cm}
+
 \lstset{language=Python}
 \begin{lstlisting}[frame=single]
-
-### DEFINE VARIABLES TO BE USED IN ROBUST FUNCTION (MODIFIED)
 total = [white_total, black_total, asian_total, islander_total, native_total, other_total, latino_total]
-# earlier in the code, I defined each of the variables in this list
-# these totals will eventually be pulled by the function
+# total is an array of the data columns corresponding to the total population of each race
+
 distance = [[white_half, white_1, white_10, white_20],
             [black_half, black_1, black_10, black_20],
             [asian_half, asian_1, asian_10, asian_20],
@@ -150,49 +169,66 @@ distance = [[white_half, white_1, white_10, white_20],
             [native_half, native_1, native_10, native_20],
             [other_half, other_1, other_10, other_20],
             [latino_half, latino_1, latino_10, latino_20]]
-# these variables were also defined earlier in the code (each is a column in the dataset)
-# since there are four distances per race for a total of seven racial categories, I made an 7x4 2D array
+# distance is a 7X4 array given that it holds data for 7 racial categories and 4 distances
+# each row corresponds to a race and each column corresponds to a distance
+
 name = ['White', 'Black', 'Asian', 'Islander', 'Native', 'Other', 'Latino']
-# list of the racial group categories
-num_races = len(total)
-# the number of races in the data set, which equals the length of the list 'total'
-num_dist = 4
-# there are four distances
-perc = numpy.zeros((num_races,num_dist))
-# this is very similar to when we open an empty list before a for loop to add (append) stuff later
-# BUT it will create an empty 7x4 2D array because it has an array with 4 distance entries for each of the 7 races
-# learned this from Mark Geha; https://www.geeksforgeeks.org/numpy-zeros-python/
+# name is a list of the racial categories
+\end{lstlisting}
 
-### MODIFIED FUNCTION THAT CALCULATES AND PLOTS ALL PERCENTAGES
-for race in range(num_races):
-# this line says that the following for loop will run 7 times
-# because there are 7 races and it will run once per race
-    for dist in range(num_dist):
-    # within the for loop (i.e. for each race), the next set of code will run 4 times
-    # because it will run for each of the 4 distances per race
+The for loop containing both functions was designed to automatically input and analyze all of the data without having to manually enter each race and distance.  
+\vspace{0.25cm}
+    %# it will pull a race from the list 'name'
+    %# and pull an array of percents per race --> it will run each percentage at a time
+   % # RECALL [half,one,ten,twenty] = perc
+
+\lstset{language=Python}
+\begin{lstlisting}[frame=single]
+perc = np.zeros(7,4)
+# create an empty 7X4 array corresponding to the number of races by the number of distances
+# the percentages of each race living at a given distance will be organized in this array
+
+for race in range(7):
+# the following for loop will run 7 times (1X per race)
+    for dist in range(4):
+    # nested within the for loop is a second for loop that will run 4 times (1X per distance)
+    # this set of code will run a total of 28 times (1X per race and distance)
         perc[race][dist] = percent_race_at_distance(data, distance[race][dist], total[race], 2)
-        # this will add items to the empty 2D array
-        # the items will correspond to the output of the function that was defined to calculate percentages
-        # USE BRACKETS BECAUSE WERE ARE PULLING FROM AND ADDING TO ARRAYS
+        # each output of the function "percent_race_at_distance" will be added to array "perc"
     plot_race_percentage_vs_distance(name[race], perc[race])
-    # this will now take the new array made from the output of the percentage function
-    # and put it into the plotting function defined earlier
-    # it will pull a race from the list 'name'
-    # and pull an array of percents per race --> it will run each percentage at a time
-    # RECALL [half,one,ten,twenty] = perc
+    # the percentages in "perc" will be inputted in "plot_race_percentage_vs_distance"
+    # it will also pull each race from the list "name"
 plt.legend(name)
-# the next line of code will overlay the plots, so we need a legend
-# the legent pulls the names from the list 'name', which has the racial categories
 plt.show()
-
 \end{lstlisting}
 
 \section{Results}
 
+
+
 \section{Discussion}
 
+\newpage
 \section{References}
 
+*** This section will be edited 
+
+% Gorgon-Larsen: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4224220/
+% National Research Council: https://www.ncbi.nlm.nih.gov/books/NBK208018/
+% Tobin and Weaver: https://sites.duke.edu/lit290s-1_02_s2017/2017/03/04/health-and-socioeconomic-disparities-of-food-deserts/
+% White: https://s3.amazonaws.com/academia.edu.documents/31007738/099-107.pdf?response-content-disposition=inline%3B%20filename%3DFood_access_and_obesity.pdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWOWYYGZ2Y53UL3A%2F20200301%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200301T013418Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=790517bfa8711e12be314e5e0d9d24da4fc8f4eb241fbbb5d9d1804553d36d01
+% USDA: https://www.ers.usda.gov/data-products/food-access-research-atlas/download-the-data/
+
+\newpage
 \section{Figures}
+
+\begin{figure}[h] 
+% h is so that the figure is placed under the section title
+	\caption{Food access across racial categories \label{fig:race}}
+	% figure is saved as "race" within this document
+	\centering
+	\includegraphics[width=.6\paperwidth]{Figure_1.png}
+	% width controls how large the file is relative to the paper width
+\end{figure}
 
 \end{document}
